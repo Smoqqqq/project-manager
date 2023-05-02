@@ -1,0 +1,50 @@
+.navbar-dropdown {
+    .navbar-dropdown-title {
+        @extend .nav-link;
+    }
+    position: relative;
+
+    .navbar-dropdown-body {
+        position: absolute;
+        left: 0px;
+        top: 100%;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity, $transition;
+        background: white;
+        padding: 10px;
+        border-radius: 15px;
+        top: 70%;
+
+        .navbar-dropdown-item {
+            padding: 10px 15px;
+            min-width: 100px;
+            background: rgba(0, 0, 0, 0.05);
+            margin: 10px 0px;
+            border-radius: 10px;
+            transition: $transition;
+            cursor: pointer;
+            display: block;
+
+            &:first-child {
+                margin-top: 0px;
+            }
+
+            &:last-child {
+                margin-bottom: 0px;
+            }
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.1)
+            }
+        }
+    }
+
+    &:hover {
+        .navbar-dropdown-body {
+            opacity: 1;
+            pointer-events: all;
+            top: 100%;
+        }
+    }
+}

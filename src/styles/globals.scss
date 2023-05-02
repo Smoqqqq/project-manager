@@ -1,0 +1,87 @@
+$transition: 0.3s;
+$theme: rgb(0, 132, 255);
+$theme-dark: rgb(0, 91, 177);
+
+@import "~react-toastify/dist/ReactToastify.min.css";
+@import "./components/navbar";
+@import "./components/navbar-dropdown";
+@import "./project/project";
+@import "./project/preview";
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #eee;
+    color: black;
+    font-family: "Raleway", sans-serif;
+    margin: 0px;
+}
+
+#main-page-container {
+    padding: 100px;
+}
+
+hr {
+    margin-bottom: 50px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    outline: none;
+    border: 2px solid #bbbbbb;
+    transition: box-shadow, 0.4s;
+    box-shadow: 0px 0px 0px 0px $theme;
+    font-size: 16px;
+
+    &:active,
+    &:focus {
+        box-shadow: 0px 0px 0px 3px $theme;
+    }
+}
+
+label {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+textarea {
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 100px;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.btn {
+    padding: 10px 25px;
+    border-radius: 5px;
+    background: $theme;
+    cursor: pointer;
+    color: white;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    font-size: 16px;
+
+    &:hover {
+        background: $theme-dark
+    }
+}
+
+.mt-5 {
+    margin-top: 50px;
+}
+
+.ml-5 {
+    margin-left: 50px;
+}

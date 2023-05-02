@@ -1,0 +1,16 @@
+.project-preview {
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 2px 5px 10px 3px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    width: 30%;
+    margin: calc(10% / 4);
+
+    &:nth-child(3n+1) {
+        margin-left: 0px;
+    }
+
+    &:nth-child(3) {
+        margin-right: 0px;
+    }
+}
