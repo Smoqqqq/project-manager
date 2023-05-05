@@ -1,0 +1,113 @@
+.shortcut-helper {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 0px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0);
+    border: 2px solid #343434;
+    cursor: pointer;
+    width: 46px;
+    height: 24px;
+    transition: $transition;
+    overflow: hidden;
+
+    &.inactive {
+        background: rgba(0, 0, 0, 0);
+        border: none;
+        top: 0px;
+        right: 0px;
+        margin-right: 0px;
+    }
+
+    .shortcut {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        position: absolute;
+        opacity: 0;
+    }
+
+    &:not(.inactive) {
+        .shortcut {
+            position: relative;
+            kbd {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .shortcut-helper-icon {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        pointer-events: none;
+        margin-right: 0px;
+        border-color: transparent;
+        transition: $transition;
+    }
+
+    &:hover {
+        width: 202px;
+        height: 62px;
+        background: white;
+        border: 2px solid rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+
+        .shortcut-helper-icon {
+            opacity: 0;
+        }
+
+        .shortcut {
+            animation: 0.5s enterKbd;
+            opacity: 1;
+        }
+    }
+}
+
+@keyframes enter {
+    0% {
+        width: 50px;
+        height: 28px;
+    }
+    100% {
+        width: 202px;
+        height: 62px;
+    }
+}
+
+@keyframes enterKbd {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+kbd {
+    font-size: 12px;
+    width: 50px;
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 2px solid #343434;
+    border-bottom-width: 4px;
+    border-left-width: 3px;
+    text-align: center;
+}
+
+.has-shortcut {
+    position: relative;
+    padding-top: 15px;
+}
+
+.card {
+    .shortcut-helper {
+        right: 15px;
+        top: 15px;
+    }
+}

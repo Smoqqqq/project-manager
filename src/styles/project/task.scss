@@ -1,0 +1,90 @@
+.project-task {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: $box-shadow;
+    border-radius: 10px;
+    margin: 15px 0px;
+    position: relative;
+    width: fit-content;
+    background: white;
+    min-height: 55px;
+    transition: left $transition;
+    cursor: pointer;
+    padding-bottom: 5px;
+
+    .task-handle {
+        background: #5c5c5c;
+        height: 15px;
+        width: 100px;
+        max-width: 100%;
+        border-radius: 10px;
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%, -50%);
+        cursor: move;
+
+        &::after {
+            position: absolute;
+            top: 5px;
+            left: 15px;
+            width: 70px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            content: "";
+        }
+    }
+
+    .main-task-container {
+        white-space: nowrap;
+        max-width: 100%;
+        overflow: hidden;
+        padding: 10px;
+        padding-right: 15px;
+
+        h3 {
+            margin: 0px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        small {
+            color: #666;
+        }
+    }
+
+    &:hover {
+        max-width: 100%;
+    }
+
+    .deletion-modal {
+        position: absolute;
+        right: 0px;
+        top: 100%;
+        background: #eee;
+        border-radius: 10px;
+        padding: 15px;
+        z-index: 999;
+        box-shadow: $box-shadow;
+
+        p {
+            margin-top: 0px;
+        }
+
+        .btn {
+            white-space: nowrap;
+            margin: 0px 15px;
+
+            &:first-child {
+                margin-left: 0px
+            }
+
+            &:last-child {
+                margin-right: 0px;
+            }
+        }
+    }
+}

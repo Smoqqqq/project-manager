@@ -1,0 +1,88 @@
+.task-timeline {
+    overflow-x: scroll;
+    position: relative;
+    cursor: move;
+
+    .scale-timeline {
+        font-weight: bold;
+
+        &:not(:first-child) {
+            margin-left: 10px;
+        }
+    }
+
+    .timeline-actions {
+        position: sticky;
+        top: 0px;
+        left: 0px;
+    }
+
+    #timeline-marker-container {
+        width: 100%;
+        height: 20px;
+        position: relative;
+        margin: 30px 0px;
+        border-bottom: 1px solid black;
+
+        .timeline-marker {
+            height: 20px;
+            border-left: 1px solid black;
+            position: absolute;
+            top: 0px;
+            text-align: center;
+            font-size: 14px;
+            transition: $transition;
+        }
+    }
+
+    .timeline-days {
+        z-index: -1;
+        pointer-events: none;
+        height: calc(100% - 90px);
+        transition: $transition;
+        top: 0px;
+        display: flex;
+        flex-direction: row;
+        position: absolute;
+        left: 0px;
+        top: 90px;
+
+        .timeline-day {
+            border-left: 1px dashed #858585;
+            height: 100%;
+            transition: $transition;
+        }
+    }
+
+    .timeline-days-add {
+        display: flex;
+        flex-direction: row;
+        
+        .timeline-day-add-task {
+            transition: $transition;
+            cursor: pointer;
+
+            .timeline-day-icon {
+                background: #ddd;
+                opacity: 0;
+                height: calc(100% - 20px);
+                display: grid;
+                place-items: center;
+                margin: 10px;
+                border-radius: 10px;
+
+                svg {
+                    color: #858585;
+                    width: 30%;
+                    height: fit-content;
+                }
+            }
+
+            &:hover {
+                .timeline-day-icon {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

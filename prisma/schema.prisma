@@ -2,27 +2,56 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  password String
-  username String?
-  projects Project[]
+    id            Int       @id @default(autoincrement())
+    email         String    @unique
+    password      String
+    username      String?
+    projects      Project[]
+    Task          Task[]    @relation("authoredTasks")
+    assignedTasks Task[]    @relation("assignedTasks")
 }
 
 model Project {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  createdAt   DateTime @default(now())
-  author      User     @relation(fields: [authorId], references: [id])
-  authorId    Int
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String?
+    createdAt   DateTime @default(now())
+    author      User     @relation(fields: [authorId], references: [id])
+    authorId    Int
+    tasks       Task[]
+}
+
+model Task {
+    id            Int       @id @default(autoincrement())
+    name          String
+    description   String?
+    startDate     DateTime?
+    duration      Int?
+    author        User      @relation("authoredTasks", fields: [authorId], references: [id])
+    authorId      Int
+    assignedUsers User[]    @relation("assignedTasks")
+    createdAt     DateTime  @default(now())
+    project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId     Int
+    subTasks      SubTask[]
+}
+
+model SubTask {
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String?
+    position    Int
+    duration    Int?
+    createdAt   DateTime @default(now())
+    task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+    taskId      Int
 }

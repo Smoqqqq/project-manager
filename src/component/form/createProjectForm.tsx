@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -6,6 +7,8 @@ export default function CreateProjectForm() {
     let form = useForm();
 
     let { register } = form;
+
+    const router = useRouter();
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
@@ -25,6 +28,8 @@ export default function CreateProjectForm() {
 
             if (response.success) {
                 toast.success("Your project has been created !");
+
+                router.push("/project/" + response.result.id);
             } else {
                 toast.error(response.message);
             }

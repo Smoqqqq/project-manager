@@ -15,7 +15,7 @@ export default function Navbar() {
     let logAction = {
         title: "Log in",
         href: "/user/login",
-        clickHandler: false,
+        clickHandler: () => {},
     };
 
     if (session && session.user && session.user.email) {
@@ -56,7 +56,7 @@ export default function Navbar() {
                         ? [
                               {
                                   title: "Log out",
-                                  href: "",
+                                  href: null,
                                   clickHandler: function () {
                                       signOut({ redirect: false });
                                   },
@@ -66,7 +66,7 @@ export default function Navbar() {
                               {
                                   title: "Log in",
                                   href: "/user/login",
-                                  clickHandler: false,
+                                  clickHandler: null
                               },
                           ]
                 }
