@@ -30,6 +30,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "@types/react-beautiful-dnd": "^13.1.4",
     "prisma": "^4.13.0"
   }
 }

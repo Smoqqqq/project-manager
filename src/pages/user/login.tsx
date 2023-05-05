@@ -1,4 +1,5 @@
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { FormEvent } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -35,6 +36,7 @@ export default function Login() {
             <input type="password" id="password" {...register("password")} />
 
             <button className="btn mt-5">Submit</button>
+            <small><Link href="/user/register">No account ? <u>Register</u></Link></small>
         </form>
     );
 }
