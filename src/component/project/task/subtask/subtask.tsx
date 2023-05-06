@@ -14,7 +14,7 @@ export default function SubTask({ subTask: st }: subTaskProps) {
 
     let [subTask, setSubTask] = useState(st);
 
-    function updateSubTask(task: SubTask) {
+    function updateSubTask(task: SubTaskType) {
         setEdit(false);
         setSubTask(task);
     }

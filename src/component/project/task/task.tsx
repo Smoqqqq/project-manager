@@ -1,13 +1,7 @@
 import Task from "@/types/Task";
 import { faClock, faPenAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    FormEvent,
-    MutableRefObject,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import { MouseEvent, RefObject, createRef, useEffect, useState } from "react";
 import EditTaskForm from "../../form/editTaskForm";
 import OpenTask from "./openTask";
 import { useRouter } from "next/router";
@@ -16,7 +10,7 @@ interface ProjectTaskProps {
     task: Task;
     deleteTask: Function;
     scale: number;
-    lowestTask: Task;
+    lowestTaskDate: number | undefined;
     setDragOff: Function;
 }
 
@@ -24,7 +18,7 @@ export default function ProjectTask({
     task: t,
     deleteTask,
     scale,
-    lowestTask,
+    lowestTaskDate,
     setDragOff,
 }: ProjectTaskProps) {
     let [deletionModal, setDeletionModal] = useState(<div></div>);
@@ -32,15 +26,14 @@ export default function ProjectTask({
     let [task, setTask] = useState(t);
     let [mouseDown, setMouseDown] = useState(false);
     let [currentX, setCurrentX] = useState(0);
-    const taskRef: MutableRefObject<HTMLElement | undefined> = useRef();
+    const taskRef: RefObject<HTMLDivElement> = createRef();
     const router = useRouter();
 
     useEffect(() => {
         let leftX =
-            task.startDate && lowestTask.startDate
+            task.startDate && lowestTaskDate
                 ? Math.round(
-                      (task.startDate - lowestTask.startDate) /
-                          (1000 * 60 * 60 * 24)
+                      (task.startDate - lowestTaskDate) / (1000 * 60 * 60 * 24)
                   ) * scale
                 : 0;
         setLeft(leftX);
@@ -57,10 +50,9 @@ export default function ProjectTask({
 
     let duration = task.duration ? task.duration : false;
     let leftX =
-        task.startDate && lowestTask.startDate
+        task.startDate && lowestTaskDate
             ? Math.round(
-                  (task.startDate - lowestTask.startDate) /
-                      (1000 * 60 * 60 * 24)
+                  (task.startDate - lowestTaskDate) / (1000 * 60 * 60 * 24)
               ) * scale
             : 0;
     let [left, setLeft] = useState(leftX);
@@ -94,10 +86,9 @@ export default function ProjectTask({
 
     function stopEdit(value = false) {
         let leftX =
-            task.startDate && lowestTask.startDate
+            task.startDate && lowestTaskDate
                 ? Math.round(
-                      (task.startDate - lowestTask.startDate) /
-                          (1000 * 60 * 60 * 24)
+                      (task.startDate - lowestTaskDate) / (1000 * 60 * 60 * 24)
                   ) * scale
                 : 0;
         setLeft(leftX);
@@ -162,7 +153,7 @@ export default function ProjectTask({
         setMouseDown(false);
     }
 
-    function handleMouseMove(e: FormEvent) {
+    function handleMouseMove(e: MouseEvent) {
         if (e.movementX && mouseDown) {
             setCurrentX(currentX + e.movementX);
         }

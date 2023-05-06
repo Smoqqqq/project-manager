@@ -206,16 +206,7 @@ export default function OpenTask({ id, close }: TaskProps) {
                 </p>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <StrictModeDroppable droppableId="subTaskList">
-                        {(
-                            provided: {
-                                droppableProps: [];
-                                innerRef: Ref<HTMLDivElement>;
-                                placeholder: string;
-                            },
-                            snapshot: {
-                                placeholder: string;
-                            }
-                        ) => (
+                        {(provided) => (
                             <div
                                 style={{
                                     position: "relative",
@@ -230,28 +221,27 @@ export default function OpenTask({ id, close }: TaskProps) {
                                             draggableId={"subTask" + subTask.id}
                                             index={i}
                                         >
-                                            {(
-                                                provided: {
-                                                    innerRef: Ref<HTMLDivElement>;
-                                                    draggableProps: [];
-                                                    dragHandleProps: [];
-                                                },
-                                                snapshot: {
-                                                    isDragging: boolean;
-                                                    draggableProps: {
-                                                        style: {};
-                                                    };
-                                                }
-                                            ) => (
+                                            {(provided, snapshot) => (
                                                 <div
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    style={getItemStyle(
-                                                        snapshot.isDragging,
-                                                        provided.draggableProps
-                                                            .style
-                                                    )}
+                                                    style={{
+                                                        // some basic styles to make the items look a bit nicer
+                                                        userSelect: "none",
+                                                        margin: `0 0 ${grid}px 0`,
+                                                    
+                                                        // change background colour if dragging
+                                                        marginLeft: snapshot.isDragging
+                                                            ? -(innerWidth - (innerWidth * 0.9 > 1000 ? 1000 : innerWidth * 0.9)) /
+                                                                  2 +
+                                                              "px"
+                                                            : "0px",
+                                                        marginTop: snapshot.isDragging ? "-100px" : "0px",
+                                                    
+                                                        // styles we need to apply on draggables
+                                                        ...provided.draggableProps.style,
+                                                    }}
                                                 >
                                                     <SubTask
                                                         subTask={subTask}

@@ -1,9 +1,18 @@
 import Task from "@/types/Task";
 import ProjectTask from "../task/task";
-import { useEffect, useRef, useState, FormEvent } from "react";
+import {
+    useEffect,
+    useRef,
+    useState,
+    FormEvent,
+    createRef,
+    RefObject,
+    MouseEvent,
+} from "react";
 import TimelineDay from "./TimelineDay";
 import TimelineActions from "./timelineActions";
 import TimelineDayAddTask from "./TimelineDayAddTask";
+import { useSession } from "next-auth/react";
 // TODO:  scroll au drag
 interface TimelineProps {
     tasks: Task[];
@@ -19,9 +28,9 @@ export default function Timeline({
     addTask,
 }: TimelineProps) {
     let [scale, setScale] = useState(150); // days / 100px
-    let [mouseX, setMouseX] = useState(true);
+    let [mouseX, setMouseX] = useState(0);
     let [mouseDown, setMouseDown] = useState(false);
-    const timelineRef = useRef(null);
+    const timelineRef: RefObject<HTMLDivElement> = createRef();
 
     let [tasks, setTasks] = useState(taskList);
 
@@ -31,12 +40,8 @@ export default function Timeline({
     }
 
     let lowestTask = tasks[0]
-        ? tasks[0]
-        : {
-              startDate: new Date().getTime(),
-              duration: 1,
-              id: 0,
-          };
+        ? tasks[0].startDate
+        : new Date().getTime()
 
     useEffect(() => {
         if (timelineRef.current) {
@@ -60,16 +65,16 @@ export default function Timeline({
             let currentStart = tasks[i].startDate
                 ? new Date(Number(tasks[i].startDate))
                 : false;
-            let lowestStart = lowestTask.startDate
-                ? new Date(lowestTask.startDate)
+            let lowestStart = lowestTask
+                ? new Date(lowestTask)
                 : false;
             if (
-                (tasks[i].startDate && !lowestTask.startDate) ||
+                (tasks[i].startDate && !lowestTask) ||
                 (currentStart &&
                     lowestStart &&
                     currentStart.getTime() < lowestStart.getTime())
             ) {
-                lowestTask = tasks[i];
+                lowestTask = tasks[i].startDate;
             }
         }
     }
@@ -86,9 +91,9 @@ export default function Timeline({
                   };
         let latestDuration = latestDate.duration ? latestDate.duration : 1;
         let maxDay =
-            latestDate.startDate && lowestTask.startDate
+            latestDate.startDate && lowestTask
                 ? Math.round(
-                      (latestDate.startDate - lowestTask.startDate) /
+                      (latestDate.startDate - lowestTask) /
                           (1000 * 60 * 60 * 24)
                   ) + latestDuration
                 : 500;
@@ -112,7 +117,7 @@ export default function Timeline({
         setMouseDown(false);
     }
 
-    function handleMouseMove(e: FormEvent) {
+    function handleMouseMove(e: MouseEvent) {
         if (e.movementX && mouseDown) {
             setMouseX(mouseX - e.movementX);
         }
@@ -139,7 +144,7 @@ export default function Timeline({
             >
                 {markers.map((marker, i) => {
                     let date = new Date(
-                        Number(lowestTask.startDate) +
+                        Number(lowestTask) +
                             marker * (24 * 60 * 60 * 1000)
                     );
 
@@ -151,7 +156,7 @@ export default function Timeline({
                                     marginLeft: marker * scale + "px",
                                     width: scale + "px",
                                 }}
-                                key={marker+i}
+                                key={marker + i}
                             >
                                 {date.getDate() +
                                     "/" +
@@ -180,7 +185,7 @@ export default function Timeline({
                             task={task}
                             scale={scale}
                             key={task.id}
-                            lowestTask={lowestTask}
+                            lowestTaskDate={lowestTask}
                             setDragOff={handleMouseDown}
                         ></ProjectTask>
                     </>
@@ -190,7 +195,7 @@ export default function Timeline({
             <div className="timeline-days">
                 {[...markers, markers[markers.length - 1] + 1].map(
                     (marker, i) => {
-                        let day = new Date(Number(lowestTask.startDate));
+                        let day = new Date(Number(lowestTask));
                         day = new Date(day.setDate(day.getDate() + marker));
 
                         return (
@@ -209,7 +214,7 @@ export default function Timeline({
             <div className="timeline-days-add">
                 {[...markers, markers[markers.length - 1] + 1].map(
                     (marker, i) => {
-                        let day = new Date(Number(lowestTask.startDate));
+                        let day = new Date(Number(lowestTask));
                         day = new Date(day.setDate(day.getDate() + marker));
 
                         return (
