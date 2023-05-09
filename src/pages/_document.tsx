@@ -1,6 +1,15 @@
+import { MikroORM, MySqlDriver } from "@mikro-orm/mysql";
 import { Html, Head, Main, NextScript } from "next/document";
+import config from "../../mikro-orm.config";
 
 export default function Document() {
+    async function initOrm() {
+        const orm = await MikroORM.init(config);
+        console.log(orm.em); // access EntityManager via `em` property
+    }
+
+    initOrm();
+
     return (
         <Html lang="en">
             <Head>
