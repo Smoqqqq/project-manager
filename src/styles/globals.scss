@@ -8,15 +8,17 @@ $warning: rgb(231, 231, 0);
 $warning-dark: rgb(207, 207, 3);
 
 @import "~react-toastify/dist/ReactToastify.min.css";
-@import "./components/navbar";
-@import "./components/navbar-dropdown";
-@import "./project/project";
-@import "./project/preview";
-@import "./project/task";
-@import "./project/open-task";
-@import "./project/subtask";
+@import "./components/navbar/navbar";
+@import "./components/navbar/navbar-dropdown";
+@import "./components/project/project";
+@import "./components/project/preview";
+@import "./components/project/task";
+@import "./components/project/open-task";
+@import "./components/project/subtask";
 @import "./components/shortcut-helper";
 @import "./components/timeline";
+@import "./components/user/profile";
+@import "./components/organisation/read";
 
 * {
     box-sizing: border-box;
@@ -154,6 +156,11 @@ textarea {
     margin-top: 10px;
 }
 
+.my-3 {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
 .flex-between {
     display: flex;
     flex-direction: row;
@@ -194,4 +201,11 @@ h1 {
     box-shadow: $box-shadow;
     padding: 15px;
     border-radius: 10px;
+}
+
+.badge {
+    padding: 5px 10px;
+    background: $theme;
+    border-radius: 5px;
+    display: inline;
 }

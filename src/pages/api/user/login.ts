@@ -13,8 +13,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
     }
 
     let email = req.body.email;
-    let password = req.body.password;
-
+    
     let user = await prisma.user.findUnique({
         where: {
             email: email,
@@ -29,12 +28,12 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
     }
 
     bcrypt.compare(req.body.password, user.password, (err: object, valid: boolean) => {
-        
         if (err) {
             res.status(405).json({
                 success: false,
                 message: "An error occured. Please try again later."
             })
+            return;
         }
         
         if (valid) {
@@ -43,11 +42,13 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
                 message: "User is logged in",
                 user: user
             })
+            return;
         } else {
             res.status(405).json({
                 success: false,
                 message: "Invalid credentials"
             })
+            return;
         }
     })
 }

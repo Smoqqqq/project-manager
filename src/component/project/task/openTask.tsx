@@ -11,6 +11,7 @@ import SubTask from "./subtask/subtask";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "@/component/StrictModeDroppable";
 import ShortcutHelper from "@/component/ShortcutHelper";
+import TaskEditableTitle from "./TaskEditableTitle";
 
 interface TaskProps {
     id: number;
@@ -80,7 +81,7 @@ export default function OpenTask({ id, close }: TaskProps) {
         taskRequest.send();
     }, []);
 
-    let startDate = <>Unknown</>;
+    let dateInterval = <>Unknown</>;
 
     if (task.startDate) {
         let date = new Date(task.startDate);
@@ -107,7 +108,7 @@ export default function OpenTask({ id, close }: TaskProps) {
             "/" +
             endDate.getFullYear();
 
-        startDate = (
+        dateInterval = (
             <>
                 {startDateString}
                 <FontAwesomeIcon icon={faArrowRightArrowLeft} />
@@ -180,10 +181,7 @@ export default function OpenTask({ id, close }: TaskProps) {
             >
                 <FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
             </div>
-            <h1>
-                {task ? task.name : "..."}
-                <div className="task-date">{startDate}</div>
-            </h1>{" "}
+            <TaskEditableTitle title={task.name} dateInterval={dateInterval} taskId={task.id} />{" "}
             <hr />
             <div className="has-shortcut">
                 <ShortcutHelper

@@ -36,7 +36,7 @@ export default function Login() {
             <input type="password" id="password" {...register("password")} />
 
             <button className="btn mt-5">Submit</button>
-            <small><Link href="/user/register">No account ? <u>Register</u></Link></small>
+            <small><Link href="/user/register" className="btn btn-sm btn-secondary ml-2">No account ? <u>Register</u></Link></small>
         </form>
     );
 }

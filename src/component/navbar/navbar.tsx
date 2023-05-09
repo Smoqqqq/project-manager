@@ -1,9 +1,11 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import NavbarDropdown from "./navbarDropdown";
+import { useRouter } from "next/router";
 
 export default function Navbar() {
     const { data: session } = useSession();
+    const router = useRouter();
 
     let userEmail = "Not connected";
     let logout = (
@@ -57,8 +59,9 @@ export default function Navbar() {
                               {
                                   title: "Log out",
                                   href: null,
-                                  clickHandler: function () {
-                                      signOut({ redirect: false });
+                                  clickHandler: async function () {
+                                      await signOut({ redirect: false });
+                                      router.push("/user/login");
                                   },
                               },
                           ]
@@ -66,7 +69,7 @@ export default function Navbar() {
                               {
                                   title: "Log in",
                                   href: "/user/login",
-                                  clickHandler: null
+                                  clickHandler: null,
                               },
                           ]
                 }

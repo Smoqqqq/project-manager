@@ -11,23 +11,27 @@ datasource db {
 }
 
 model User {
-    id            Int       @id @default(autoincrement())
-    email         String    @unique
-    password      String
-    username      String?
-    projects      Project[]
-    Task          Task[]    @relation("authoredTasks")
-    assignedTasks Task[]    @relation("assignedTasks")
+    id                   Int            @id @default(autoincrement())
+    email                String         @unique
+    password             String
+    username             String?
+    projects             Project[]
+    Task                 Task[]         @relation("authoredTasks")
+    assignedTasks        Task[]         @relation("assignedTasks")
+    organisations        Organisation[] @relation("organisationUsers")
+    createdOrganisations Organisation[] @relation("createdOrganisations")
 }
 
 model Project {
-    id          Int      @id @default(autoincrement())
-    name        String
-    description String?
-    createdAt   DateTime @default(now())
-    author      User     @relation(fields: [authorId], references: [id])
-    authorId    Int
-    tasks       Task[]
+    id             Int           @id @default(autoincrement())
+    name           String
+    description    String?
+    createdAt      DateTime      @default(now())
+    author         User          @relation(fields: [authorId], references: [id])
+    authorId       Int
+    tasks          Task[]
+    Organisation   Organisation @relation("organisationProjects", fields: [organisationId], references: [id])
+    organisationId Int
 }
 
 model Task {
@@ -54,4 +58,13 @@ model SubTask {
     createdAt   DateTime @default(now())
     task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
     taskId      Int
+}
+
+model Organisation {
+    id        Int       @id @default(autoincrement())
+    name      String
+    createdBy User      @relation("createdOrganisations", fields: [creatorId], references: [id])
+    creatorId Int
+    users     User[]    @relation("organisationUsers")
+    projects  Project[] @relation("organisationProjects")
 }
