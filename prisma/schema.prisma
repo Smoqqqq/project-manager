@@ -23,14 +23,14 @@ model User {
 }
 
 model Project {
-    id             Int           @id @default(autoincrement())
+    id             Int          @id @default(autoincrement())
     name           String
     description    String?
-    createdAt      DateTime      @default(now())
-    author         User          @relation(fields: [authorId], references: [id])
+    createdAt      DateTime     @default(now())
+    author         User         @relation(fields: [authorId], references: [id])
     authorId       Int
     tasks          Task[]
-    Organisation   Organisation @relation("organisationProjects", fields: [organisationId], references: [id])
+    organisation   Organisation @relation("organisationProjects", fields: [organisationId], references: [id])
     organisationId Int
 }
 

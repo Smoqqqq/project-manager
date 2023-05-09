@@ -16,7 +16,15 @@ export default async function create(
             message: "You must be logged in.",
             session: session,
             user: session?.user,
-            email: session?.user?.email
+            email: session?.user?.email,
+        });
+        return;
+    }
+
+    if (!req.body.organisationId) {
+        res.status(500).json({
+            success: false,
+            message: "No `organisationId` provided",
         });
         return;
     }
@@ -38,6 +46,11 @@ export default async function create(
                 id: user?.id,
             },
         },
+        organisation: {
+            connect: {
+                id: Number(req.body.organisationId),
+            }
+        }
     };
 
     try {
@@ -47,12 +60,14 @@ export default async function create(
         res.json({
             success: true,
             message: "Project created !",
-            result: result
+            result: result,
         });
     } catch (e) {
+        console.log(e);
+
         res.status(405).json({
             success: false,
-            message: "An error occured, please try again later"
-        })
+            message: "An error occured, please try again later",
+        });
     }
 }

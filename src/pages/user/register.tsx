@@ -1,5 +1,6 @@
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import { FormEvent } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -9,7 +10,9 @@ export default function RegisterUser() {
 
     const router = useRouter();
 
-    function handleSubmit() {
+    function handleSubmit(e: FormEvent) {
+        e.preventDefault();
+
         let { email, username, password } = form.getValues();
 
         let request = new XMLHttpRequest();
@@ -22,27 +25,28 @@ export default function RegisterUser() {
         request.onload = async () => {
             let response = JSON.parse(request.response);
 
-            console.log(response)
-
             if (response.success) {
                 toast.success("Your account has been created !");
 
-                await signIn("credentials", {
-                    email: email,
-                    password: password,
+                let res = await signIn("credentials", {
+                    email: encodeURI(email),
+                    password: encodeURI(password),
                     redirect: false,
                 }).then((res) => {
-                    console.log(res)
-                    // router.push("/organisation/create");
+                    console.log(res);
+                    router.push("/organisation/create");
                 });
-
             } else {
                 toast.error(response.message);
             }
         };
 
         request.send(
-            `email=${email}&username=${username}&password=${password}`
+            new URLSearchParams({
+                email: email,
+                password: password,
+                username: username,
+            })
         );
     }
 
@@ -55,13 +59,7 @@ export default function RegisterUser() {
             <label>Password</label>
             <input type="password" id="password" {...register("password")} />
 
-            <button
-                className="btn"
-                type="button"
-                onClick={() => {
-                    handleSubmit();
-                }}
-            >
+            <button className="btn" type="button" onClick={handleSubmit}>
                 Submit
             </button>
         </form>

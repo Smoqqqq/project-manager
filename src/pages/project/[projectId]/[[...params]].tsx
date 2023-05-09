@@ -4,21 +4,26 @@ import Timeline from "@/component/project/timeline/timeline";
 import ProjectHeader from "@/component/project/projectHeader";
 import Project from "@/types/Project";
 import Task from "@/types/Task";
-import { PrismaClient } from "@prisma/client";
+import { Organisation, PrismaClient, User } from "@prisma/client";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 interface ProjectProps {
-    project: Project;
+    project: {
+        id: number;
+        name: string;
+        description: string | null;
+        createdAt: String | Date;
+        author: User;
+        tasks: Task[];
+        organisation: Organisation;
+    };
     tasks: Task[];
 }
 
 export default function Project({ project: projectData, tasks }: ProjectProps) {
     const addTaskBtn = (
-        <button
-            className="btn"
-            onClick={addTaskForm}
-        >
+        <button className="btn" onClick={addTaskForm}>
             Add task
         </button>
     );
@@ -76,7 +81,6 @@ export default function Project({ project: projectData, tasks }: ProjectProps) {
 
     return (
         <div id="project">
-
             <ProjectHeader project={project} setProject={setProject} />
 
             <h2 className="mt-5">Tasks</h2>
@@ -85,8 +89,12 @@ export default function Project({ project: projectData, tasks }: ProjectProps) {
 
             <hr className="mt-5" />
 
-            <Timeline tasks={taskList} deleteTask={deleteTask} projectId={project.id} addTask={addTask} />
-
+            <Timeline
+                tasks={taskList}
+                deleteTask={deleteTask}
+                projectId={project.id}
+                addTask={addTask}
+            />
         </div>
     );
 }
@@ -110,6 +118,7 @@ export const getServerSideProps = async (context: ServerSideProps) => {
             id: true,
             name: true,
             description: true,
+            organisation: true
         },
     });
 
@@ -124,8 +133,8 @@ export const getServerSideProps = async (context: ServerSideProps) => {
             assignedUsers: true,
         },
         orderBy: {
-            startDate: "asc"
-        }
+            startDate: "asc",
+        },
     });
 
     let tasks: Task[] = [];

@@ -9,6 +9,7 @@ export default function CreateProjectForm() {
     let { register } = form;
 
     const router = useRouter();
+    const organisationId = router.query.organisation;
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
@@ -35,7 +36,7 @@ export default function CreateProjectForm() {
             }
         };
 
-        request.send(`name=${name}&description=${description}`);
+        request.send(`name=${name}&description=${description}&organisationId=${organisationId}`);
     }
 
     return (

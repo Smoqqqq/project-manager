@@ -3,9 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenAlt } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import EditProjectForm from "../form/editProjectForm";
+import { Organisation, User } from "@prisma/client";
+import Task from "@/types/Task";
 
 interface ProjectHeaderProps {
-    project: Project;
+    project: {
+        id: number;
+        name: string;
+        description: string | null;
+        createdAt: String | Date;
+        author: User;
+        tasks: Task[];
+        organisation: Organisation;
+    };
     setProject: Function;
 }
 
@@ -42,9 +52,11 @@ export default function ProjectHeader({
     }
 
     return (
-        <>
+        <div onDoubleClick={editProject}>
             <div className="flex-between">
-                <h1>{project.name}</h1>
+                <h1>
+                    {project.name} - {project.organisation.name}
+                </h1>
                 <button
                     className="btn btn-secondary btn-sm"
                     onClick={editProject}
@@ -53,6 +65,6 @@ export default function ProjectHeader({
                 </button>
             </div>
             <p>{project.description}</p>
-        </>
+        </div>
     );
 }

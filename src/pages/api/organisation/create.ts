@@ -13,13 +13,15 @@ export default async function create(req: NextApiRequest, res: NextApiResponse) 
             message: "Could not find current user. You need to be logged in."
         })
     }
+
+    let currentUserEmail = session.user.email;
     
     const prisma = new PrismaClient();
 
     let users = await prisma.user.findMany({
         where: {
             email: {
-                in: req.body.users
+                in: [...req.body.users, currentUserEmail]
             }
         },
         select: {
@@ -28,7 +30,7 @@ export default async function create(req: NextApiRequest, res: NextApiResponse) 
     });
 
     try {
-        await prisma.organisation.create({
+        let organisation = await prisma.organisation.create({
             data: {
                 creatorId: session.user.id,
                 name: req.body.name,
@@ -39,7 +41,8 @@ export default async function create(req: NextApiRequest, res: NextApiResponse) 
         });
 
         return res.json({
-            success: true
+            success: true,
+            result: organisation
         })
     } catch (e) {
         console.log(e)

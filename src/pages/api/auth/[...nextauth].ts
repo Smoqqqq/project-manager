@@ -29,6 +29,10 @@ export const authOptions: NextAuthOptions = {
                 const email = credentials?.email;
                 const password = credentials?.password;
 
+                if (!email || !password) {
+                    return null;
+                }
+
                 const res = await fetch(
                     "http://localhost:3000/api/user/login",
                     {
@@ -37,13 +41,14 @@ export const authOptions: NextAuthOptions = {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            email,
-                            password,
+                            email: encodeURI(email),
+                            password: encodeURI(password),
                         }),
                     }
                 );
                 const response = await res.json();
                 const user = response.user;
+
                 if (res.ok && user) {
                     return user;
                 } else return null;

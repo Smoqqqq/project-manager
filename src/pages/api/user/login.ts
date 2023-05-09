@@ -20,6 +20,8 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
         },
     });
 
+    console.log(email, user);
+
     if (!user) {
         return res.status(405).json({
             success: false,

@@ -6,8 +6,6 @@ export default async function register(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    console.log(req.body);
-
     if (!req.body.password || !req.body.email || !req.body.username) {
         res.json({
             success: false,
@@ -22,13 +20,17 @@ export default async function register(
         return;
     }
 
-    await bcrypt.genSalt(10).then((salt: string) => {
-        bcrypt.hash(req.body.password, salt).then(async (password: string) => {
+    console.log(req.body)
+
+    await bcrypt.genSalt(10).then(async (salt: string) => {
+        await bcrypt.hash(req.body.password, salt).then(async (password: string) => {
             let userData = {
                 email: req.body.email,
                 password: password,
                 username: req.body.username,
             };
+
+            console.log(userData);
 
             let prisma = new PrismaClient();
 
@@ -54,6 +56,7 @@ export default async function register(
                     });
                 }
             }
+
             return res.status(200).json({
                 success: true,
                 message: "Your account was created !",

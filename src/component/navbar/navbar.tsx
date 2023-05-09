@@ -36,16 +36,16 @@ export default function Navbar() {
             <div id="navbar-nav">
                 <Link href="/">Home</Link>
                 <NavbarDropdown
-                    title="Project"
+                    title="Organisations"
                     items={[
                         {
-                            title: "Create",
-                            href: "/project/create",
+                            title: "My organisations",
+                            href: "/organisation/search",
                             clickHandler: null,
                         },
                         {
-                            title: "Search",
-                            href: "/project/search",
+                            title: "New",
+                            href: "/organisation/create",
                             clickHandler: null,
                         },
                     ]}

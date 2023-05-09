@@ -1,5 +1,6 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
 import { KeyboardEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -9,6 +10,7 @@ export default function CreateOrganisationForm() {
     let { register } = form;
 
     let [emails, setEmails] = useState<string[]>([]);
+    const router = useRouter();
 
     function handleSubmit() {
         let { name } = form.getValues();
@@ -25,6 +27,7 @@ export default function CreateOrganisationForm() {
 
             if (response.success) {
                 toast.success("organisation created !");
+                router.push("/organisation/" + response.result.id);
             } else {
                 toast.error(response.message);
             }
@@ -56,6 +59,9 @@ export default function CreateOrganisationForm() {
 
     return (
         <div>
+            <h1>Create a new organisation</h1>
+            <p>Please create an organisation, you will then be able to create projects</p>
+            <hr />
             <label>Name</label>
             <input type="text" {...register("name")} />
 
