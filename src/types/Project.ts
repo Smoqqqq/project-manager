@@ -11,3 +11,17 @@ type Project = {
 };
 
 export default Project;
+
+export interface ProjectInterface {
+    id: number;
+    name: string;
+    description: string | null;
+    createdAt: number;
+}
+
+export interface OrgInterface {
+    id: number;
+    name: string;
+    projects: ProjectInterface[];
+    users: User[]
+}

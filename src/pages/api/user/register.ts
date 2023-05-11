@@ -20,8 +20,6 @@ export default async function register(
         return;
     }
 
-    console.log(req.body)
-
     await bcrypt.genSalt(10).then(async (salt: string) => {
         await bcrypt.hash(req.body.password, salt).then(async (password: string) => {
             let userData = {

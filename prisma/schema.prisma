@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-    id                   Int            @id @default(autoincrement())
+    id                   Int            @id @default(autoincrement()) @map("user_id")
     email                String         @unique
     password             String
     username             String?
@@ -28,20 +28,20 @@ model Project {
     description    String?
     createdAt      DateTime     @default(now())
     author         User         @relation(fields: [authorId], references: [id])
-    authorId       Int
+    authorId       Int          @map("user_id")
     tasks          Task[]
     organisation   Organisation @relation("organisationProjects", fields: [organisationId], references: [id])
     organisationId Int
 }
 
 model Task {
-    id            Int       @id @default(autoincrement())
+    id            Int       @id @default(autoincrement()) @map("task_id")
     name          String
     description   String?
     startDate     DateTime?
     duration      Int?
     author        User      @relation("authoredTasks", fields: [authorId], references: [id])
-    authorId      Int
+    authorId      Int       @map("user_id")
     assignedUsers User[]    @relation("assignedTasks")
     createdAt     DateTime  @default(now())
     project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -57,14 +57,14 @@ model SubTask {
     duration    Int?
     createdAt   DateTime @default(now())
     task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
-    taskId      Int
+    taskId      Int      @map("task_id")
 }
 
 model Organisation {
     id        Int       @id @default(autoincrement())
     name      String
     createdBy User      @relation("createdOrganisations", fields: [creatorId], references: [id])
-    creatorId Int
+    creatorId Int       @map("user_id")
     users     User[]    @relation("organisationUsers")
     projects  Project[] @relation("organisationProjects")
 }

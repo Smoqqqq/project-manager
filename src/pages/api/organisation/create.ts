@@ -32,7 +32,7 @@ export default async function create(req: NextApiRequest, res: NextApiResponse) 
     try {
         let organisation = await prisma.organisation.create({
             data: {
-                creatorId: session.user.id,
+                creatorId: Number(session.user.id),
                 name: req.body.name,
                 users: {
                     connect: users
