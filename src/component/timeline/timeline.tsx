@@ -2,9 +2,7 @@ import Task from "@/types/Task";
 import ProjectTask from "../task/task";
 import {
     useEffect,
-    useRef,
     useState,
-    FormEvent,
     createRef,
     RefObject,
     MouseEvent,
@@ -12,8 +10,7 @@ import {
 import TimelineDay from "./TimelineDay";
 import TimelineActions from "./timelineActions";
 import TimelineDayAddTask from "./TimelineDayAddTask";
-import { useSession } from "next-auth/react";
-// TODO:  scroll au drag
+
 interface TimelineProps {
     tasks: Task[];
     deleteTask: Function;
@@ -128,10 +125,10 @@ export default function Timeline({
     return (
         <div
             className="task-timeline"
-            onMouseDown={handleMouseDown}
+            /* onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
-            onMouseMove={handleMouseMove}
+            onMouseMove={handleMouseMove} */
             ref={timelineRef}
         >
             <TimelineActions scale={scale} setScale={setScale} />

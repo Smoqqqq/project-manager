@@ -1,12 +1,13 @@
 import CreateTaskForm from "@/component/form/createTaskForm";
-import ProjectTask from "@/component/project/task/task";
-import Timeline from "@/component/project/timeline/timeline";
+import Timeline from "@/component/timeline/timeline";
 import ProjectHeader from "@/component/project/projectHeader";
 import Project from "@/types/Project";
 import Task from "@/types/Task";
 import { Organisation, PrismaClient, User } from "@prisma/client";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import isGrantedProject, { getUser } from "@/functions";
+import { GetServerSidePropsContext } from "next";
 
 interface ProjectProps {
     project: {
@@ -99,15 +100,21 @@ export default function Project({ project: projectData, tasks }: ProjectProps) {
     );
 }
 
-interface ServerSideProps {
-    query: {
-        projectId: number;
-    };
-}
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
 
-export const getServerSideProps = async (context: ServerSideProps) => {
-    let { projectId } = context.query;
-    projectId = Number(projectId);
+    let user = await getUser(context);
+
+    if (!user) {
+        return {
+            redirect: {
+                permanant: false,
+                destination: "/user/login?toast=" + btoa("Please login before accessing a project.")
+            }
+        }
+    }
+
+    let { projectId: pId} = context.query;
+    let projectId = Number(pId);
 
     let prisma = new PrismaClient();
     let project = await prisma.project.findUnique({
@@ -121,6 +128,12 @@ export const getServerSideProps = async (context: ServerSideProps) => {
             organisation: true
         },
     });
+
+    if (project === null) {
+        throw new Error(`Project with id ${projectId} doesn't exist.`);
+    }
+
+    isGrantedProject(user.id, project.organisation.id);
 
     let tasksRaw = await prisma.task.findMany({
         where: {

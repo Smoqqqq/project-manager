@@ -2,7 +2,7 @@ import Task from "@/types/Task";
 import { faClock, faPenAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MouseEvent, RefObject, createRef, useEffect, useState } from "react";
-import EditTaskForm from "../../form/editTaskForm";
+import EditTaskForm from "../form/editTaskForm";
 import OpenTask from "./openTask";
 import { useRouter } from "next/router";
 
@@ -25,7 +25,7 @@ export default function ProjectTask({
     let [edit, setEdit] = useState(false);
     let [task, setTask] = useState(t);
     let [mouseDown, setMouseDown] = useState(false);
-    let [currentX, setCurrentX] = useState(0);
+    // let [currentX, setCurrentX] = useState(0);
     const taskRef: RefObject<HTMLDivElement> = createRef();
     const router = useRouter();
 
@@ -97,9 +97,9 @@ export default function ProjectTask({
 
     useEffect(() => {
         if (taskRef.current) {
-            taskRef.current.style.transform = `translateX(${currentX}px)`;
+            taskRef.current.style.transform = `translateX(${left}px)`;
         }
-    }, [currentX]);
+    }, [left]);
 
     let startDate = <></>;
 
@@ -149,13 +149,26 @@ export default function ProjectTask({
         setMouseDown(true);
     }
 
+    /**
+     * left: 200
+     * scale: 250
+     * 
+     * closest: 150
+     * 
+     * NEW left = 
+     */
+
     function handleMouseUp() {
+        let x = Math.round(left / scale) * scale;
+        console.log(left, scale, x)
+        // // setCurrentX(0)
+        setLeft(x)
         setMouseDown(false);
     }
 
     function handleMouseMove(e: MouseEvent) {
         if (e.movementX && mouseDown) {
-            setCurrentX(currentX + e.movementX);
+            setLeft(left + e.movementX);
         }
     }
 
@@ -176,6 +189,7 @@ export default function ProjectTask({
                 ref={taskRef}
                 onMouseUp={handleMouseUp}
                 onMouseMove={handleMouseMove}
+                onMouseDown={handleMouseDown}
                 onDoubleClick={() => {
                     router.push(location.href + "/task/" + task.id);
                     setOpen(true);
@@ -189,11 +203,6 @@ export default function ProjectTask({
                     setDeletionModal(<div></div>);
                 }}
             >
-                <div
-                    className="task-handle"
-                    onMouseDown={handleMouseDown}
-                    onMouseLeave={handleMouseUp}
-                ></div>
                 <div className="main-task-container">
                     <h3>{task.name}</h3>
                     <small>

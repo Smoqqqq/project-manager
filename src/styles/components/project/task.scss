@@ -15,29 +15,6 @@
     cursor: pointer;
     padding-bottom: 5px;
 
-    .task-handle {
-        background: #5c5c5c;
-        height: 15px;
-        width: 100px;
-        max-width: 100%;
-        border-radius: 10px;
-        position: absolute;
-        left: 50%;
-        top: 100%;
-        transform: translate(-50%, -50%);
-        cursor: move;
-
-        &::after {
-            position: absolute;
-            top: 5px;
-            left: 15px;
-            width: 70px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            content: "";
-        }
-    }
-
     .main-task-container {
         white-space: nowrap;
         max-width: 100%;

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import Link from "next/link";
 import { OrgInterface, ProjectInterface } from "@/types/Project";
+import { getUser, redirectIfNull } from "@/functions";
 
 interface OrganisationSearchProps {
     orgs: {
@@ -45,7 +46,16 @@ export default function SearchOrganisations({ orgs }: OrganisationSearchProps) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-    let session = await getServerSession(context.req, context.res, authOptions);
+    let user = await getUser(context);
+
+    let redirect = await redirectIfNull(
+        user,
+        "Please log in before accessing organisations"
+    );
+
+    if (redirect) {
+        return redirect;
+    }
 
     let prisma = new PrismaClient();
 
@@ -54,14 +64,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             users: {
                 some: {
                     id: {
-                        equals: Number(session?.user?.id),
+                        equals: Number(user?.id),
                     },
                 },
             },
         },
         include: {
             projects: true,
-            users: true
+            users: true,
         },
     });
 

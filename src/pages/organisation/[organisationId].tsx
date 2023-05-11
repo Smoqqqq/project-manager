@@ -1,6 +1,7 @@
 import ProjectGrid from "@/component/project/grid";
 import ProjectPreview from "@/component/project/preview";
 import UserProfile from "@/component/user/profile";
+import { redirectIfNull } from "@/functions";
 import Project from "@/types/Project";
 import Task from "@/types/Task";
 import { PrismaClient, User, Organisation } from '@prisma/client';
@@ -30,6 +31,7 @@ export default function read({ organisation, projects }: OrganisationProps) {
             <h1>{organisation.name}</h1>
             <hr />
 
+            <h2>Members</h2>
             <div id="users-grid" className="mb-5">
                 {organisation.users.map((user) => {
                     return <UserProfile user={user} key={user.id} />;
@@ -42,6 +44,8 @@ export default function read({ organisation, projects }: OrganisationProps) {
             >
                 Nouveau
             </Link>
+
+            <h2 className="mt-5">Projects</h2>
             <ProjectGrid projects={projects} />
         </div>
     );
@@ -71,9 +75,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
     });
 
+    let redirect = await redirectIfNull(organisation, "Organisation could not be found")
+    
+    if (redirect) {
+        return redirect;
+    }
+
     let projects = await prisma.project.findMany({
         include: {
-            tasks: true,
             author: true
         },
         where: {
@@ -93,8 +102,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             createdAt: new Date(project.createdAt).getTime(),
         });
     }
-
-    for (let i = 0; i < projects.length; i++)
 
     return {
         props: {
