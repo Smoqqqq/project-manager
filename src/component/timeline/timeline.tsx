@@ -1,12 +1,6 @@
 import Task from "@/types/Task";
 import ProjectTask from "../task/task";
-import {
-    useEffect,
-    useState,
-    createRef,
-    RefObject,
-    MouseEvent,
-} from "react";
+import { useEffect, useState, createRef, RefObject, MouseEvent } from "react";
 import TimelineDay from "./TimelineDay";
 import TimelineActions from "./timelineActions";
 import TimelineDayAddTask from "./TimelineDayAddTask";
@@ -25,28 +19,20 @@ export default function Timeline({
     addTask,
 }: TimelineProps) {
     let [scale, setScale] = useState(150); // days / 100px
-    let [mouseX, setMouseX] = useState(0);
-    let [mouseDown, setMouseDown] = useState(false);
     const timelineRef: RefObject<HTMLDivElement> = createRef();
 
     let [tasks, setTasks] = useState(taskList);
+
+    let lowestTask = tasks[0]
+        ? new Date(Number(tasks[0].startDate)).getTime()
+        : new Date().getTime();
+
+    let markers: number[] = addMarkers();
 
     function deleteTask(task: Task) {
         setTasks((taskList) => taskList.filter((t) => t.id !== task.id));
         removeTask(task);
     }
-
-    let lowestTask = tasks[0]
-        ? tasks[0].startDate
-        : new Date().getTime()
-
-    useEffect(() => {
-        if (timelineRef.current) {
-            timelineRef.current.scrollLeft = mouseX;
-        }
-    }, [mouseX]);
-
-    let markers: number[] = addMarkers();
 
     function addTaskCallback(task: Task) {
         if (task.startDate) {
@@ -57,43 +43,25 @@ export default function Timeline({
         setTasks([...tasks, task]);
     }
 
-    function orderTasks() {
-        for (let i = 0; i < tasks.length; i++) {
-            let currentStart = tasks[i].startDate
-                ? new Date(Number(tasks[i].startDate))
-                : false;
-            let lowestStart = lowestTask
-                ? new Date(lowestTask)
-                : false;
-            if (
-                (tasks[i].startDate && !lowestTask) ||
-                (currentStart &&
-                    lowestStart &&
-                    currentStart.getTime() < lowestStart.getTime())
-            ) {
-                lowestTask = tasks[i].startDate;
-            }
-        }
-    }
-
+    // TODO: cleanup
     function addMarkers() {
         let markerArray = [];
 
-        let latestDate =
-            tasks.length > 1
-                ? tasks[tasks.length - 1]
-                : {
-                      startDate: new Date().getTime(),
-                      duration: 1,
-                  };
-        let latestDuration = latestDate.duration ? latestDate.duration : 1;
-        let maxDay =
-            latestDate.startDate && lowestTask
-                ? Math.round(
-                      (latestDate.startDate - lowestTask) /
-                          (1000 * 60 * 60 * 24)
-                  ) + latestDuration
-                : 500;
+        let latestDate = {
+            startDate: tasks[tasks.length - 1]
+                ? tasks[tasks.length - 1].startDate
+                : new Date().getTime(),
+            duration: tasks[tasks.length - 1]
+                ? tasks[tasks.length - 1].duration
+                : 1,
+        };
+        let maxDay = 500;
+
+        if (latestDate.startDate) {
+            const diffTime = Math.abs(latestDate.startDate - lowestTask);
+            maxDay = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            maxDay += latestDate.duration ? latestDate.duration : 1;
+        }
 
         for (let i = 0; i < maxDay + 1; i++) {
             markerArray.push(i);
@@ -102,33 +70,15 @@ export default function Timeline({
         return markerArray;
     }
 
-    function handleMouseDown() {
-        setMouseDown(true);
-    }
-
     function handleMouseUp() {
-        setMouseDown(false);
+        let event = new Event("timeline-mouse-up");
+        window.dispatchEvent(event);
     }
-
-    function handleMouseLeave() {
-        setMouseDown(false);
-    }
-
-    function handleMouseMove(e: MouseEvent) {
-        if (e.movementX && mouseDown) {
-            setMouseX(mouseX - e.movementX);
-        }
-    }
-
-    orderTasks();
 
     return (
         <div
             className="task-timeline"
-            /* onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseLeave}
-            onMouseMove={handleMouseMove} */
             ref={timelineRef}
         >
             <TimelineActions scale={scale} setScale={setScale} />
@@ -141,27 +91,24 @@ export default function Timeline({
             >
                 {markers.map((marker, i) => {
                     let date = new Date(
-                        Number(lowestTask) +
-                            marker * (24 * 60 * 60 * 1000)
+                        Number(lowestTask) + marker * (24 * 60 * 60 * 1000)
                     );
 
                     return (
-                        <>
-                            <div
-                                className="timeline-marker"
-                                style={{
-                                    marginLeft: marker * scale + "px",
-                                    width: scale + "px",
-                                }}
-                                key={marker + i}
-                            >
-                                {date.getDate() +
-                                    "/" +
-                                    (date.getMonth() + 1) +
-                                    "/" +
-                                    date.getFullYear()}
-                            </div>
-                        </>
+                        <div
+                            className="timeline-marker"
+                            style={{
+                                marginLeft: marker * scale + "px",
+                                width: scale + "px",
+                            }}
+                            key={i}
+                        >
+                            {date.getDate() +
+                                "/" +
+                                (date.getMonth() + 1) +
+                                "/" +
+                                date.getFullYear()}
+                        </div>
                     );
                 })}
                 {/* Close last date */}
@@ -176,16 +123,13 @@ export default function Timeline({
 
             {tasks.map((task, i) => {
                 return (
-                    <>
-                        <ProjectTask
-                            deleteTask={deleteTask}
-                            task={task}
-                            scale={scale}
-                            key={task.id}
-                            lowestTaskDate={lowestTask}
-                            setDragOff={handleMouseDown}
-                        ></ProjectTask>
-                    </>
+                    <ProjectTask
+                        deleteTask={deleteTask}
+                        task={task}
+                        scale={scale}
+                        key={task.id}
+                        lowestTaskDate={lowestTask}
+                    ></ProjectTask>
                 );
             })}
 
@@ -194,7 +138,6 @@ export default function Timeline({
                     (marker, i) => {
                         let day = new Date(Number(lowestTask));
                         day = new Date(day.setDate(day.getDate() + marker));
-
                         return (
                             <TimelineDay
                                 marker={marker}
@@ -202,7 +145,7 @@ export default function Timeline({
                                 day={day}
                                 projectId={projectId}
                                 addTask={addTaskCallback}
-                                key={marker + i}
+                                key={i}
                             />
                         );
                     }
@@ -221,7 +164,7 @@ export default function Timeline({
                                 day={day}
                                 projectId={projectId}
                                 addTask={addTaskCallback}
-                                key={marker + i}
+                                key={i}
                             />
                         );
                     }

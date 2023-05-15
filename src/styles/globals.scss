@@ -8,6 +8,8 @@ $warning: rgb(231, 231, 0);
 $warning-dark: rgb(207, 207, 3);
 
 @import "~react-toastify/dist/ReactToastify.min.css";
+@import "./components/btn";
+@import "./utils/spacers";
 @import "./components/navbar/navbar";
 @import "./components/navbar/navbar-dropdown";
 @import "./components/project/project";
@@ -70,99 +72,6 @@ textarea {
 
 .text-right {
     text-align: right;
-}
-
-.btn {
-    padding: 10px 25px;
-    border-radius: 5px;
-    background: $theme;
-    cursor: pointer;
-    color: white;
-    outline: none;
-    border: none;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s;
-    font-size: 16px;
-    text-align: center;
-
-    &.btn-sm {
-        padding: 7px 15px;
-        font-size: 14px;
-    }
-
-    &.btn-danger {
-        background: $danger;
-
-        &:hover {
-            background: $danger-dark;
-        }
-    }
-
-    &.btn-warning {
-        background: $warning;
-
-        &:hover {
-            background: $warning-dark;
-        }
-    }
-
-    &.btn-secondary {
-        background: #adadad;
-
-        &:hover {
-            background: #7e7e7e;
-        }
-    }
-
-    &:hover {
-        background: $theme-dark;
-    }
-}
-
-.mt-5 {
-    margin-top: 50px;
-}
-
-.mb-5 {
-    margin-bottom: 50px;
-}
-
-.ml-5 {
-    margin-left: 50px;
-}
-
-.mr-5 {
-    margin-right: 50px;
-}
-
-.mr-2 {
-    margin-right: 20px;
-}
-
-.ml-2 {
-    margin-left: 20px;
-}
-
-.mr-1 {
-    margin-right: 10px;
-}
-
-.ml-1 {
-    margin-left: 10px;
-}
-
-.mt-0 {
-    margin-top: 0px;
-}
-
-.mt-1 {
-    margin-top: 10px;
-}
-
-.my-3 {
-    margin-top: 30px;
-    margin-bottom: 30px;
 }
 
 .flex-between {

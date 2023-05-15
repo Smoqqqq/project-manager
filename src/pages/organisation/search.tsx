@@ -25,12 +25,14 @@ export default function SearchOrganisations({ orgs }: OrganisationSearchProps) {
                         <hr />
                         {org.projects.map((project) => {
                             return (
-                                <Link
-                                    href={"/project/" + project.id}
-                                    key={project.id}
-                                >
-                                    {project.name}
-                                </Link>
+                                <div className="py-1" key={project.id}>
+                                    <Link
+                                        href={"/project/" + project.id}
+                                        className="simple-link"
+                                    >
+                                        {project.name}
+                                    </Link>
+                                </div>
                             );
                         })}
 
